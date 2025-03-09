@@ -11,12 +11,12 @@ export default defineEventHandler(async event => {
   const runtime = useRuntimeConfig()
   const pinataInstance = new PinataSDK({
     pinataJwt: `${runtime.PINIA_JWT}`,
-    pinataGateway:`${runtime.Gateway}`,
+    pinataGateway:`${runtime.PINIA_GATEWAY}`,
   });
   event.context.pinata = pinataInstance
   const file = new File(["hello"], "Testing.txt", { type: "text/plain" });
 const upload = await 
-event.context.pinata.upload.file(file);
+event.context.pinata.upload.private.file(file);
   const hstoken = getCookie(event, 'hstoken') || ''
   if(hstoken){
     try {
@@ -25,9 +25,16 @@ event.context.pinata.upload.file(file);
         event.context.claims = claims
         const id = claims['sub']
         const email = claims['email']
-        const user = await event.context.pinata.Gateway.get(claims['cid'])
+        const user = await event.context.pinata.files.private.list().name(email)
         if(user){
-          setCookie(event, 'hsuser', JSON.stringify(user))
+          console.log('start user logs')
+          console.log(user)
+          console.log('end user logs')
+          const { data, contentType } = await event.context.pinata.gateways.private.get(
+            user.files[0].cid
+          )
+          
+          setCookie(event, 'hsuser', JSON.stringify(data))
         } else {
           setCookie(event, 'hsuser', '')
         }

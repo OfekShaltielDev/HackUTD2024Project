@@ -1,7 +1,8 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
-export default defineNuxtConfig({
-  compatibilityDate: '2024-04-03',
+import tailwindcss from "@tailwindcss/vite";
 
+export default defineNuxtConfig({
+    compatibilityDate: "2024-11-01",
   runtimeConfig: {
       PINIA_API_KEY: '',
       PINATA_API_SECRET: '',
@@ -12,15 +13,15 @@ export default defineNuxtConfig({
       BASEURL: '',
       ISSUER: '',
     },
-
+  build: {
+      transpile: ['@vuepic/vue-datepicker']
+  },
   css: ['~/assets/css/main.css'],
   devtools: { enabled: true },
-  
-  postcss: {
-    plugins: {
-      tailwindcss: {},
-      autoprefixer: {},
-    },
+  vite: {
+    plugins: [
+      tailwindcss(),
+    ],
   },
   modules: [
     '@primevue/nuxt-module'

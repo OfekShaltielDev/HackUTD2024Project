@@ -9,5 +9,5 @@ const pin = await event.context.pinata.Gateway.get(id as string)
         }
     })*/
 
-        return pin
+    return pin
 })
